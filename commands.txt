@@ -1,0 +1,29 @@
+1. npm init -y
+2. npm i webpack webpack-cli webpack-dev-server -D
+3. package.json
+"scripts": {
+    "start": "webpack-dev-server --mode development --open",
+    "build": "webpack --mode production"
+  },
+4. To create dist folder
+npm run start
+5. npm i react react-dom -S
+6. npm i babel-core babel-loader babel-preset-env babel-preset-react -D
+7. Create webpack.config.js
+8. Create .babelrc
+9. Create index.js and index.html
+10. Install html-webpack-plugin
+npm i html-webpack-plugin -D
+-  This plugin generates an HTML file with <script> injected, writes this to dist/index.html, and minifies the file.
+- The filename value is the name of the minified HTML that will be generated in the dist folder.
+
+11. npm i css-loader style-loader -D
+
+12. Make CSS modular using webpack
+options: {
+  modules: true,
+  importLoaders: 1,
+  localIdentName: "[name]_[local]_[hash:base64]",
+  sourceMap: true,
+  minimize: true
+}
