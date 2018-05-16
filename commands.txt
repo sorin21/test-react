@@ -27,3 +27,26 @@ options: {
   sourceMap: true,
   minimize: true
 }
+
+13. npm i redux react-redux
+
+14. Install unic id generator
+npm install uuid
+
+15. Install Object rest spread transform
+npm install --save-dev babel-plugin-transform-object-rest-spread
+ 
+ - then add it to .babelrc file
+
+{
+  "plugins": ["transform-object-rest-spread"]
+}
+
+16. Install momentjs and airbnb
+http://momentjs.com/
+
+https://github.com/airbnb/react-dates
+
+npm i moment react-dates react-addons-shallow-compare
+
+- react dates require a dependecy: react-addons-shallow-compare
