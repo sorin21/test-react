@@ -6,122 +6,118 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      title: 'Test React',
-      subtitle: 'Learn React by testing it.',
-      options: ['Item one', 'Item two'],
-      // name: 'Andrei',
-      age: 17,
-      count: 0,
-      id: uuid()
+      id: uuid(),
+      title: 'React Decision',
+      subtitle: 'Decide what to do with React!',
+      options: ['Item one', 'Item two', 'Item four']
     }
-    this.getLocation = this.getLocation.bind(this);
-    this.exportHTML = this.exportHTML.bind(this);
-    this.addOne = this.addOne.bind(this);
-    this.minusOne = this.minusOne.bind(this);
-    this.resetCount = this.resetCount.bind(this);
-    this.onInputChange = this.onInputChange.bind(this);
-    this.onFormSubmit = this.onFormSubmit.bind(this);
-    this.editor = React.createRef();
+    this.handleDeleteOptions = this.handleDeleteOptions.bind(this);
+    this.handlePick = this.handlePick.bind(this);
   }
 
-  getLocation(location) {
-    if(location) {
-      return <p>Location: {location}</p>
-    }
+  handleDeleteOptions() {
+    this.setState(() => {
+      return {
+        options: []
+      }
+    })
   }
 
-  addOne() {
-    this.setState(() => ({
-      count: this.state.count + 1
-    }))
+  handlePick() {
+    const random = Math.floor(Math.random() * this.state.options.length);
+    const option = this.state.options[random];
+    console.log(option);
   }
-
-  minusOne() {
-    this.setState(() => ({
-      count: this.state.count - 1
-    }))
-  }
-
-  resetCount() {
-    this.setState(() => ({
-      count: 0
-    }))
-  }
-
-  onInputChange(event) {
-
-  }
-
-  onFormSubmit(event) {
-    event.preventDefault();
-    const option = event.target.elements.option.value;
-    const newArray = this.state.options.push(option);
-    this.setState(() => ({
-      options: newArray
-    }))
-  }
-
-
-  exportHTML() {
-    this.editor.exportHTML((data) => {
-      const {design, html} = data;
-      console.log('exportHMLT', html);
-    });
-  };
 
   render() {
     return (
       <div>
-        <h1>{this.state.title}</h1>
-        <p>{this.state.subtitle}</p>
-        
-        <hr />
-
-        <h3>{this.state.name? this.state.name : 'Anonymous'}</h3>
-        {this.state.age > 18 && <p>User Age: {this.state.age} </p>}
-        {this.getLocation(this.state.location)}
-
-        {this.state.options.length > 0 ? 'Here are your options' : 'No options'}
-        <p>Options length: {this.state.options.length}</p>
-        <ul>
-          {this.state.options.map((option) => {
-            return
-            <li key={option}>{option}</li>
-          })}
-        </ul>
-        <form onSubmit={this.onFormSubmit}>
-          <input type="text" name="option" onChange={this.onInputChange} />
-          <button>Add Option</button>
-        </form>
-        
-        <TemplateTwo 
-          count={this.state.count}
-          addOne={this.addOne}
-          minusOne={this.minusOne}
-          resetCount={this.resetCount}
+        <Header 
+          title={this.state.title}
+          subtitle={this.state.subtitle}
         />
-
-        {/* <h1>react email editor Demo</h1>
-
-        <div>
-          <button onClick={this.exportHTML}>Export HTML</button>
-        </div>
-        <EmailEditor 
-          ref={editor => this.editor = editor}
-        /> */}
+        <Action 
+          hasOptions={this.state.options.length > 0}
+          handlePick={this.handlePick}
+        />
+        <Options  
+          options={this.state.options}
+          handleDeleteOptions={this.handleDeleteOptions}
+        />
+        <AddOption />
       </div>
     );
   }
 }
 
-const TemplateTwo = (props) => (
-  <div>
-    <h1>Count: {props.count}</h1>
-    <button onClick={props.addOne}>+1</button>
-    <button onClick={props.minusOne}>-1</button>
-    <button onClick={props.resetCount}>Reset Count</button>
-  </div>
-)
+class Header extends Component {
+  render() {
+    return(
+      <div>
+        <h1>{this.props.title}</h1>
+        <h2>{this.props.subtitle}</h2>
+      </div>
+    );
+  }
+}
+
+class Action extends Component {
+ 
+  render() {
+    return(
+      <div>
+        <button 
+          onClick={this.props.handlePick}
+          disabled={!this.props.hasOptions}
+        >Decide what to do with React!
+        </button>
+      </div>
+    );
+  }
+}
+
+class Options extends Component {
+  render() {
+    return(
+      <div>
+        <button 
+          onClick={this.props.handleDeleteOptions}
+        >Remove All
+        </button>
+        <p>Options page</p>
+        {this.props.options.map((option) => <Option key={option} option={option} />)}
+      </div>
+    );
+  }
+}
+
+class Option extends Component {
+  render() {
+    return(
+      <div>
+        <p>{this.props.option}</p>
+      </div>
+    );
+  }
+}
+
+class AddOption extends Component {
+  handleAddOption(event) {
+    event.preventDefault();
+    const option = event.target.elements.option.value.trim();
+    console.log(option);
+  }
+  render() {
+    return(
+      <div>
+        <form onSubmit={this.handleAddOption}>
+          <input type="text" name="option" />
+          <button>Add Option</button>
+        </form>
+      </div>
+    );
+  }
+}
 
 
 
