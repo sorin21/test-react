@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom'
-// import EmailEditor from 'react-email-editor';
 import uuid from 'uuid';
+import AddOption from './components/AddOption';
 class App extends Component {
   constructor(props) {
     super(props);
@@ -14,14 +14,40 @@ class App extends Component {
     this.handleDeleteOptions = this.handleDeleteOptions.bind(this);
     this.handlePick = this.handlePick.bind(this);
     this.handleAddOption = this.handleAddOption.bind(this);
+    this.handleDeleteOption = this.handleDeleteOption.bind(this);
   }
 
+  componentDidMount() {
+    try {
+      const json = localStorage.getItem('option');
+      const options = JSON.parse(json);
+      this.setState(() => ({ options }))
+    } catch (error) {
+      
+    }
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState.options.length !== this.state.options.length) {
+      const json = JSON.stringify(this.state.options);
+      localStorage.setItem('options', json);
+      console.log('componentDidUpdate');
+    }
+  }
+  
+
   handleDeleteOptions() {
-    this.setState(() => {
-      return {
-        options: []
-      }
-    })
+    this.setState(() => ({ options: []}));
+  }
+
+  handleDeleteOption(optionToRemove) {
+    this.setState((prevState) => ({
+      // we set the options array with its old values and filter it
+      options: prevState.options.filter((option) => {
+        // return true to keep the item in array or false to no keep
+        return optionToRemove !== option;
+
+      })
+    }))
   }
 
   handlePick() {
@@ -60,6 +86,7 @@ class App extends Component {
         <Options  
           options={this.state.options}
           handleDeleteOptions={this.handleDeleteOptions}
+          handleDeleteOption={this.handleDeleteOption}
         />
         <AddOption
           handleAddOption={this.handleAddOption} 
@@ -108,50 +135,20 @@ const Options = (props) => {
       >Remove All
       </button>
       <p>Options page</p>
-      {props.options.map((option) => <Option key={option} option={option} />)}
+      {props.options.map((option) => (
+        <Option 
+          key={option} 
+          option={option} 
+          handleDeleteOption={props.handleDeleteOption}
+        />
+      ))}
     </div>
   );
 }
 
-const Option = (props) => {
-  return(
-    <div>
-      <p>{props.option}</p>
-    </div>
-  );
-}
 
-class AddOption extends Component {
-  constructor(props) {
-    super();
-    this.handleAddOption = this.handleAddOption.bind(this);
-    this.state = {
-      error: undefined
-    }
-  }
-  handleAddOption(event) {
-    event.preventDefault();
-    const option = event.target.elements.option.value.trim();
-    const error = this.props.handleAddOption(option);
 
-    this.setState(() => {
-      return {
-        error: error
-      }
-    })
-  }
-  render() {
-    return(
-      <div>
-        <p>{this.state.error}</p>
-        <form onSubmit={this.handleAddOption}>
-          <input type="text" name="option" />
-          <button>Add Option</button>
-        </form>
-      </div>
-    );
-  }
-}
+
 
 
 export default App;
