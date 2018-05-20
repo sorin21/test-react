@@ -1,8 +1,16 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
+const path = require('path');
 
 const htmlPlugin = new HtmlWebPackPlugin({
   template: "./src/index.html",
   filename: "./index.html"
+});
+
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const textWebpackPlugin = new ExtractTextPlugin({
+  filename: 'styles.css',
+  allChunks: true,
+  disable: process.env.NODE_ENV !== 'production'
 });
 
 module.exports = {
@@ -16,24 +24,44 @@ module.exports = {
         }
       },
       {
-        test: /\.s?css$/,
-        use: [
-          {
-            loader: "style-loader"
-          },
-          {
-            loader: "css-loader",
-            options: {
-              modules: true,
-              importLoaders: 1,
-              localIdentName: "[name]_[local]_[hash:base64]",
-              sourceMap: true,
-              minimize: true
-            }
-          }
-        ]
+        test: /\.css$/,
+          use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: [{
+                loader: 'css-loader',
+                options: {
+                  modules: true,
+                  localIdentName: '[name]__[local]___[hash:base64:5]'
+                }
+              },
+              'postcss-loader'
+            ]
+          })
+      },
+      {
+        test: /\.scss$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                sourceMap: true,
+                importLoaders: 2,
+                localIdentName: '[name]__[local]___[hash:base64:5]'
+              }
+            },
+            'sass-loader'
+          ]
+        })
       }
     ]
   },
-  plugins: [htmlPlugin]
+  devtool: 'cheap-module-eval-source-map',
+  devServer: {
+    contentBase: path.join(__dirname, 'public'),
+    historyApiFallback: true
+  },
+  plugins: [htmlPlugin, textWebpackPlugin]
 };

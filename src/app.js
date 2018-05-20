@@ -1,29 +1,32 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom'
+import ReactDOM from "react-dom";
+
 import uuid from 'uuid';
 import AddOption from './components/AddOption';
+import Header from './components/Header';
+import Action from './components/Action';
+import Options from './components/Options';
+
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      id: uuid(),
-      title: 'React Decision',
-      subtitle: 'Decide what to do with React!',
-      options: props.options
-    }
-    this.handleDeleteOptions = this.handleDeleteOptions.bind(this);
-    this.handlePick = this.handlePick.bind(this);
-    this.handleAddOption = this.handleAddOption.bind(this);
-    this.handleDeleteOption = this.handleDeleteOption.bind(this);
+  state = {
+    id: uuid(),
+    title: 'React Decision',
+    subtitle: 'Decide what to do with React!',
+    options: []
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     try {
-      const json = localStorage.getItem('option');
+      const json = localStorage.getItem('options');
       const options = JSON.parse(json);
-      this.setState(() => ({ options }))
-    } catch (error) {
       
+      if(options) {
+        this.setState(() => ({ options }))
+        console.log(options);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
   componentDidUpdate(prevProps, prevState) {
@@ -35,11 +38,11 @@ class App extends Component {
   }
   
 
-  handleDeleteOptions() {
+  handleDeleteOptions = () => {
     this.setState(() => ({ options: []}));
   }
 
-  handleDeleteOption(optionToRemove) {
+  handleDeleteOption = (optionToRemove) => {
     this.setState((prevState) => ({
       // we set the options array with its old values and filter it
       options: prevState.options.filter((option) => {
@@ -50,13 +53,13 @@ class App extends Component {
     }))
   }
 
-  handlePick() {
+  handlePick = () => {
     const random = Math.floor(Math.random() * this.state.options.length);
     const option = this.state.options[random];
     console.log(option);
   }
 
-  handleAddOption(option) {
+  handleAddOption = (option) => {
     // if there is an empty string
     if(!option) {
       return 'Enter valid value to add item';
@@ -79,76 +82,26 @@ class App extends Component {
           title={this.state.title}
           subtitle={this.state.subtitle}
         />
-        <Action 
-          hasOptions={this.state.options.length > 0}
-          handlePick={this.handlePick}
-        />
-        <Options  
-          options={this.state.options}
-          handleDeleteOptions={this.handleDeleteOptions}
-          handleDeleteOption={this.handleDeleteOption}
-        />
-        <AddOption
-          handleAddOption={this.handleAddOption} 
-        />
+        <div className="container">
+          <Action 
+            hasOptions={this.state.options.length > 0}
+            handlePick={this.handlePick}
+          />
+          <div className="widget" >
+            <Options  
+              options={this.state.options}
+              handleDeleteOptions={this.handleDeleteOptions}
+              handleDeleteOption={this.handleDeleteOption}
+            />
+            <AddOption
+              handleAddOption={this.handleAddOption} 
+            />
+          </div>
+        </div>
       </div>
     );
   }
 }
-
-App.defaultProps = {
-  options: []
-}
-
-const Header = (props) => {
-  return (
-    <div>
-      <h1>{props.title}</h1>
-      <h2>{props.subtitle}</h2>
-    </div>
-  );
-};
-
-Header.defaultProps = {
-  title: 'some default'
-}
-
-const Action = (props) => {
-  return(
-      <div>
-        <button 
-          onClick={props.handlePick}
-          disabled={!props.hasOptions}
-        >Decide what to do with React!
-        </button>
-      </div>
-    );
-};
-
-
-
-const Options = (props) => {
-  return(
-    <div>
-      <button 
-        onClick={props.handleDeleteOptions}
-      >Remove All
-      </button>
-      <p>Options page</p>
-      {props.options.map((option) => (
-        <Option 
-          key={option} 
-          option={option} 
-          handleDeleteOption={props.handleDeleteOption}
-        />
-      ))}
-    </div>
-  );
-}
-
-
-
-
 
 
 export default App;

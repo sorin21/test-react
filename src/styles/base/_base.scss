@@ -1,0 +1,50 @@
+html {
+  // 16 * 62.5 = 10 
+  // so 
+  // font-size: 2.2rem is 22px
+  font-size: 62.5%;
+}
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: $m-size;
+  background-color: $dark-blue;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: default;
+}
+
+.bigButton {
+  background-color: $purple;
+  border: none;
+  border-bottom: .6rem solid darken($purple, 10%);
+  color: white;
+  font-weight: bold;
+  font-size: $l-size;
+  width: 100%;
+  margin-bottom: $xl-size;
+  padding: 2.4rem;
+}
+
+.big-button:disabled {
+  opacity: .5;
+}
+
+.button {
+  background-color: $purple;
+  border: none;
+  border-bottom: .3rem solid darken($purple, 10%);
+  color: white;
+  font-weight: 500;
+  padding: $s-size;
+}
+
+//BEM - modifier
+.button--link {
+  background: none;
+  border: none;
+  color: $off-white;
+  padding: 0;
+}

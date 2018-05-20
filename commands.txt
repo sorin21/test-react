@@ -1,8 +1,9 @@
 1. npm init -y
 2. npm i webpack webpack-cli webpack-dev-server -D
 3. package.json
+-- hot = allow you to only reload the component that is changed 
 "scripts": {
-    "start": "webpack-dev-server --mode development --open",
+    "start": "webpack-dev-server --mode development --open --hot",
     "build": "webpack --mode production"
   },
 4. To create dist folder
@@ -18,20 +19,32 @@ npm i html-webpack-plugin -D
 - The filename value is the name of the minified HTML that will be generated in the dist folder.
 
 11. npm i css-loader style-loader -D
+  npm install sass-loader node-sass -D
+  npm install extract-text-webpack-plugin@next
+  npm i -D postcss-loader
 
-12. Make CSS modular using webpack
-options: {
-  modules: true,
-  importLoaders: 1,
-  localIdentName: "[name]_[local]_[hash:base64]",
-  sourceMap: true,
-  minimize: true
-}
+12. Install normalize css to CSS resets
+npm install normalize.css
 
-13. npm i redux react-redux
+- add it to app.js or index.js
+import 'normalize.css/normalize.css';
 
-14. Install unic id generator
-npm install uuid
+
+
+13. Add webpack devtool for cheching  errors
+devtool: 'cheap-module-eval-source-map',
+
+12a. Install Class properties transform to add properties(methods) to classes wihout constructor
+https://babeljs.io/docs/plugins/transform-class-properties/
+
+npm install -D babel-plugin-transform-class-properties
+
+- add this to .babelrc to plugins
+    "transform-class-properties",
+
+
+14. npm i redux react-redux
+
 
 15. Install Object rest spread transform
 npm install --save-dev babel-plugin-transform-object-rest-spread
@@ -50,3 +63,7 @@ https://github.com/airbnb/react-dates
 npm i moment react-dates react-addons-shallow-compare
 
 - react dates require a dependecy: react-addons-shallow-compare
+
+
+17. Install unic id generator
+npm install uuid
